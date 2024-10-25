@@ -49,6 +49,7 @@ class CodeSandTest {
 
     @Test
     void test02(){
+        CodeSandBox codeSandBox = CodeSandBoxFactory.newInstance (type);
         List<String> list = Arrays.asList ("1 2", "3 4");
         String code="import java.util.Scanner;\n" +
                 "\n" +
