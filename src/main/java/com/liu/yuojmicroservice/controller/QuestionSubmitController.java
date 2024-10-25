@@ -31,6 +31,8 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/question_submit")
 @Slf4j
+//表示过时
+@Deprecated
 public class QuestionSubmitController {
 
 

@@ -10,6 +10,7 @@ import com.liu.yuojmicroservice.model.entity.Question;
 import com.liu.yuojmicroservice.model.enums.JudgeInfoMessageEnum;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -24,8 +25,8 @@ public class JavaLanguageJudgeStrategy implements JudgeStrategy {
         List<String> outputList = judgeContext.getOutputList ();
         JudgeInfo judgeInfo = judgeContext.getJudgeInfo ();
         //获取答题信息
-        Long time = judgeInfo.getTime ();  //时间
-        Long memory = judgeInfo.getMemory (); //内存
+        Long time = Optional.ofNullable (judgeInfo.getTime ()).orElse (0L);  //时间
+        Long memory = Optional.ofNullable (judgeInfo.getMemory ()).orElse (0L); //内存
         List<JudgeCase> judgeCases = judgeContext.getJudgeCases ();
         Question question = judgeContext.getQuestion ();
         JudgeInfo judgeResponse = new JudgeInfo ();

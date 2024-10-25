@@ -89,7 +89,7 @@ public class JudgeServiceImpl implements JudgeService {
                 .build ();
         //代码沙箱执行结果
         ExecuteCodeResponse executeCodeResponse = codeSandboxProxy.executeCode (build);
-        List<String> ouputList = executeCodeResponse.getOuputList ();
+        List<String> ouputList = executeCodeResponse.getOutputList ();
         JudgeInfo judgeInfo = executeCodeResponse.getJudgeInfo ();
         //5.根据代码沙箱的执行结果设置题目的判题状态和信息
         JudgeContext judgeContext = new JudgeContext ();

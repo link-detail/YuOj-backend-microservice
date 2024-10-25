@@ -49,14 +49,24 @@ class CodeSandTest {
 
     @Test
     void test02(){
-        CodeSandBox codeSandBox = CodeSandBoxFactory.newInstance (type);
-        CodeSandboxProxy codeSandboxProxy = new CodeSandboxProxy (codeSandBox);
         List<String> list = Arrays.asList ("1 2", "3 4");
-        ExecuteCodeRequest build = ExecuteCodeRequest.builder ().code ("System.out.println (12);")
-                .language (QuestionSubmitLanguageEnum.GO)
-                .inputList (list).build ();
-        ExecuteCodeResponse executeCodeResponse = codeSandboxProxy.executeCode (build);
+        String code="import java.util.Scanner;\n" +
+                "\n" +
+                "public class Main {\n" +
+                "    public static void main(String[] args){\n" +
+                "        Scanner sc = new Scanner(System.in);\n" +
+                "        int a = sc.nextInt();\n" +
+                "        int b = sc.nextInt();\n" +
+                "        System.out.println(a + b);\n" +
+                "    }\n" +
+                "}";
+        ExecuteCodeRequest build = ExecuteCodeRequest.builder ().code (code)
+                .language (QuestionSubmitLanguageEnum.JAVA)
+                .inputList (list).
+                build ();
+        ExecuteCodeResponse executeCodeResponse = codeSandBox.executeCode (build);
         System.out.println (executeCodeResponse);
+
 
     }
 

@@ -20,7 +20,7 @@ import java.util.List;
 public class ExecuteCodeResponse {
 
     //输出用例
-    private List<String> ouputList;
+    private List<String> outputList;
 
     //执行信息(其他信息 跟judgeInfo中的不一样)
     private String message;

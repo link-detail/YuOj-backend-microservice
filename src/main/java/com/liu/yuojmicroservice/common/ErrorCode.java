@@ -15,7 +15,11 @@ public enum ErrorCode {
     NOT_FOUND_ERROR(40003,"请求数据不存在"),
     FORBIDDEN_ERROR(40004,"禁止访问"),
     SYSTEM_ERROR(40005,"系统错误"),
-    OPERATION_ERROR(40006,"操作失败");
+    OPERATION_ERROR(40006,"操作失败"),
+    /**
+     * 调用远程服务一般错误码是500开头，本质也是系统内部出问题，调用别人的服务出了问题
+     */
+    API_REUEST_ERROR(50010,"接口调用失败");
 
 
     /**
