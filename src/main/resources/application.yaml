@@ -1,7 +1,7 @@
 #项目端口号
 server:
   address: 0.0.0.0
-  port: 8121
+  port: 8122
   servlet:
     #上下文路径
     context-path: /api
@@ -12,11 +12,20 @@ server:
 
 #spring基本配置
 spring:
+  #redis连接
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 1
   application:
     name: yuoj-backend
   profiles:
     #选择配置文件
     active: dev
+    #session存放方式
+  session:
+    store-type: redis
+
 
   #swagger配置
   mvc:
