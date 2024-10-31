@@ -21,8 +21,7 @@ import com.liu.yuojbackendmodel.entity.QuestionSubmit;
 import com.liu.yuojbackendmodel.enums.JudgeInfoMessageEnum;
 import com.liu.yuojbackendmodel.enums.QuestionSubmitLanguageEnum;
 import com.liu.yuojbackendmodel.enums.QuestionSubmitStatusEnum;
-import com.liu.yuojbackendserviceclient.service.QuestionService;
-import com.liu.yuojbackendserviceclient.service.QuestionSubmitService;
+import com.liu.yuojbackendserviceclient.service.QuestionFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,10 +42,7 @@ public class JudgeServiceImpl implements JudgeService {
     private String type;
 
     @Resource
-    private QuestionSubmitService questionSubmitService;
-
-    @Resource
-    private QuestionService questionService;
+    private QuestionFeignClient questionFeignClient;
 
     @Resource
     private JudgeManager judgeManager;
@@ -54,12 +50,12 @@ public class JudgeServiceImpl implements JudgeService {
     @Override
     public QuestionSubmit doJudge(long questionSubmitId) {
         //1.判断题目提交信息是否存在
-        QuestionSubmit questionSubmit = questionSubmitService.getById (questionSubmitId);
+        QuestionSubmit questionSubmit = questionFeignClient.getQuestionSubmitById (questionSubmitId);
         if (questionSubmit==null){
             throw new BusinessException (ErrorCode.PARAMS_ERROR,"提交信息不存在！");
         }
         //判断题目是否存在
-        Question question = questionService.getById (questionSubmit.getQuestionId ());
+        Question question = questionFeignClient.getQuestionById (questionSubmit.getQuestionId ());
         if (question==null){
             throw new BusinessException (ErrorCode.NOT_FOUND_ERROR,"题目不存在!");
         }
@@ -72,7 +68,7 @@ public class JudgeServiceImpl implements JudgeService {
         QuestionSubmit questionSubmitUpdate = new QuestionSubmit ();
         questionSubmitUpdate.setId (questionSubmitId);
         questionSubmitUpdate.setStatus (QuestionSubmitStatusEnum.RUNNING.getValue ());
-        boolean b1 = questionSubmitService.updateById (questionSubmitUpdate);
+        boolean b1 = questionFeignClient.updateQuestionSubmitById (questionSubmitUpdate);
         if (!b1){
             throw new BusinessException (ErrorCode.SYSTEM_ERROR,"题目状态信息更新失败!");
         }
@@ -112,12 +108,12 @@ public class JudgeServiceImpl implements JudgeService {
         Question question1 = new Question ();
         question1.setId (questionSubmit.getQuestionId ());
         question1.setSubmitNum (ObjectUtil.defaultIfNull (question1.getSubmitNum (),0)+1);
-        boolean update = questionService.updateById (question1);
+        boolean update = questionFeignClient.updateQuestionById (question1);
         ThrowUtils.throwIf (!update,ErrorCode.OPERATION_ERROR);
         questionSubmitResult.setJudgeInfo (JSONUtil.toJsonStr (judgeResponse));
-        boolean b2 = questionSubmitService.updateById (questionSubmitResult);
+        boolean b2 = questionFeignClient.updateQuestionSubmitById (questionSubmitResult);
         ThrowUtils.throwIf (!b2,ErrorCode.OPERATION_ERROR,"修改失败！");
         //获取最近数据返回
-        return questionSubmitService.getById (questionSubmitId);
+        return questionFeignClient.getQuestionSubmitById (questionSubmitId);
     }
 }

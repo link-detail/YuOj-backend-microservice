@@ -16,8 +16,8 @@ import com.liu.yuojbackendmodel.entity.Question;
 import com.liu.yuojbackendmodel.entity.User;
 import com.liu.yuojbackendmodel.vo.question.QuestionVO;
 import com.liu.yuojbackendquestionservice.mapper.QuestionMapper;
-import com.liu.yuojbackendserviceclient.service.QuestionService;
-import com.liu.yuojbackendserviceclient.service.UserService;
+import com.liu.yuojbackendquestionservice.service.QuestionService;
+import com.liu.yuojbackendserviceclient.service.UserFeignClient;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
     implements QuestionService {
 
     @Resource
-    private UserService userService;
+    private UserFeignClient userFeignClient;
 
     //标题最大长度
     public static final int TITLE_MAX_LEN=80;
@@ -99,9 +99,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         Long userId = question.getUserId ();
         User user = null;
         if (userId!=null && userId>0){
-            user=userService.getById (userId);
+            user= userFeignClient.getById (userId);
         }
-        questionVO.setUserVO (userService.getUserVO (user));
+        questionVO.setUserVO (userFeignClient.getUserVO (user));
         return questionVO;
     }
 
@@ -152,14 +152,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
 //        收集用户信息(set集合元素里的元素是不可以重复的，用来收集用户id很适合)
         Set<Long> isSet = questionList.stream ().map (Question::getUserId).collect (Collectors.toSet ()); //收集用户id
 //        以id来存储每一个用户对象(id:对象)  根据id进行分组
-        Map<Long, List<User>> userMap = userService.listByIds (isSet).stream ().collect (Collectors.groupingBy (User::getId));
+        Map<Long, List<User>> userMap = userFeignClient.listByIds (isSet).stream ().collect (Collectors.groupingBy (User::getId));
         //关联用户信息
         List<QuestionVO> questionVOS = questionList.stream ().map (question -> {
             QuestionVO questionVO = QuestionVO.objToVO (question);
             if (userMap.containsKey (question.getUserId ())) {
                 //找到对应用户
                 User user = userMap.get (question.getUserId ()).get (0);
-                questionVO.setUserVO (userService.getUserVO (user));
+                questionVO.setUserVO (userFeignClient.getUserVO (user));
             }
 
             return questionVO;

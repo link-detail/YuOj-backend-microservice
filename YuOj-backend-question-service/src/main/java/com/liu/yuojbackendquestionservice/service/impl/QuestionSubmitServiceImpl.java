@@ -17,9 +17,10 @@ import com.liu.yuojbackendmodel.enums.QuestionSubmitLanguageEnum;
 import com.liu.yuojbackendmodel.enums.QuestionSubmitStatusEnum;
 import com.liu.yuojbackendmodel.vo.questionsubmit.QuestionSubmitVO;
 import com.liu.yuojbackendquestionservice.mapper.QuestionSubmitMapper;
-import com.liu.yuojbackendserviceclient.service.QuestionService;
-import com.liu.yuojbackendserviceclient.service.QuestionSubmitService;
-import com.liu.yuojbackendserviceclient.service.UserService;
+import com.liu.yuojbackendquestionservice.service.QuestionService;
+import com.liu.yuojbackendquestionservice.service.QuestionSubmitService;
+import com.liu.yuojbackendserviceclient.service.JudgeFeignClient;
+import com.liu.yuojbackendserviceclient.service.UserFeignClient;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -43,7 +45,10 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     private QuestionService questionService;
 
     @Resource
-    private UserService userService;
+    private UserFeignClient userFeignClient;
+
+    @Resource
+    private JudgeFeignClient judgeFeignClient;
 
 
     /*
@@ -76,6 +81,8 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         //保存
         boolean save = this.save (questionSubmit);
         ThrowUtils.throwIf (!save, ErrorCode.OPERATION_ERROR, "数据插入失败!");
+        //异步执行判题
+        CompletableFuture.runAsync (()-> judgeFeignClient.doJudge (questionSubmit.getId ()));
         return questionSubmit.getId ();
     }
 
@@ -114,10 +121,10 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     public QuestionSubmitVO getQuestionSubmitVO(QuestionSubmit questionSubmit, HttpSession session) {
         QuestionSubmitVO questionSubmitVO = QuestionSubmitVO.objToVo (questionSubmit);
 
-        User loginUser = userService.getLoginUser (session);
+        User loginUser = userFeignClient.getLoginUser (session);
 
         //只有管理员或者是自己可以查看提交代码信息
-        if (!loginUser.getId ().equals (questionSubmit.getUserId ()) && !userService.isAdmin (loginUser)) {
+        if (!loginUser.getId ().equals (questionSubmit.getUserId ()) && !userFeignClient.isAdmin (loginUser)) {
             questionSubmitVO.setCode (null);
         }
         return questionSubmitVO;
