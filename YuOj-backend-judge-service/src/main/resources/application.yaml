@@ -9,6 +9,7 @@ server:
       cookie:
         #cookie 30天过期（单位：s）
         max-age: 2592000
+        path: /api
 #spring基本配置
 spring:
   #redis连接
@@ -35,6 +36,12 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+  # rabbitmq配置
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    password: guest
+    username: guest
 
 
 

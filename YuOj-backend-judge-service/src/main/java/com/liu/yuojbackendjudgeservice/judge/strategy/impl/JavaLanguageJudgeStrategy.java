@@ -9,6 +9,7 @@ import com.liu.yuojbackendmodel.dto.question.JudgeConfig;
 import com.liu.yuojbackendmodel.entity.Question;
 import com.liu.yuojbackendmodel.enums.JudgeInfoMessageEnum;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,8 +23,8 @@ public class JavaLanguageJudgeStrategy implements JudgeStrategy {
     @Override
     public JudgeInfo doJudge(JudgeContext judgeContext) {
         //原题目信息跟代码沙箱执行之后返回的信息对比，来确定提交题目的答题信息
-        List<String> outputList = judgeContext.getOutputList ();
-        JudgeInfo judgeInfo = judgeContext.getJudgeInfo ();
+        List<String> outputList = Optional.ofNullable (judgeContext.getOutputList ()).orElse (new ArrayList<> ());
+        JudgeInfo judgeInfo = Optional.ofNullable (judgeContext.getJudgeInfo ()).orElse (new JudgeInfo ());
         //获取答题信息
         Long time = Optional.ofNullable (judgeInfo.getTime ()).orElse (0L);  //时间
         Long memory = Optional.ofNullable (judgeInfo.getMemory ()).orElse (0L); //内存

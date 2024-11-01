@@ -9,6 +9,7 @@ server:
       cookie:
         #cookie 30天过期（单位：s）
         max-age: 2592000
+        path: /api
 #spring基本配置
 spring:
   #redis连接

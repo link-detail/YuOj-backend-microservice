@@ -17,6 +17,7 @@ import com.liu.yuojbackendmodel.enums.QuestionSubmitLanguageEnum;
 import com.liu.yuojbackendmodel.enums.QuestionSubmitStatusEnum;
 import com.liu.yuojbackendmodel.vo.questionsubmit.QuestionSubmitVO;
 import com.liu.yuojbackendquestionservice.mapper.QuestionSubmitMapper;
+import com.liu.yuojbackendquestionservice.rabbitmq.MyMessageProducer;
 import com.liu.yuojbackendquestionservice.service.QuestionService;
 import com.liu.yuojbackendquestionservice.service.QuestionSubmitService;
 import com.liu.yuojbackendserviceclient.service.JudgeFeignClient;
@@ -50,6 +51,9 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     @Resource
     private JudgeFeignClient judgeFeignClient;
 
+    @Resource
+    private MyMessageProducer myMessageProducer;
+
 
     /*
     添加题目提交记录
@@ -81,8 +85,12 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         //保存
         boolean save = this.save (questionSubmit);
         ThrowUtils.throwIf (!save, ErrorCode.OPERATION_ERROR, "数据插入失败!");
-        //异步执行判题
-        CompletableFuture.runAsync (()-> judgeFeignClient.doJudge (questionSubmit.getId ()));
+
+        //消息队列发送消息
+        myMessageProducer.sendMessage ("code_exchange", "my_routingKey",String.valueOf (questionSubmit.getId ()));
+
+//        //异步执行判题
+//        CompletableFuture.runAsync (()-> judgeFeignClient.doJudge (questionSubmit.getId ()));
         return questionSubmit.getId ();
     }
 

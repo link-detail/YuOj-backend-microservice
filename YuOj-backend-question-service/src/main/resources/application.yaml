@@ -9,6 +9,7 @@ server:
       cookie:
         #cookie 30天过期（单位：s）
         max-age: 2592000
+        path: /api
 #spring基本配置
 spring:
   #redis连接
@@ -36,6 +37,11 @@ spring:
       discovery:
         server-addr: 127.0.0.1:8848
 
+  rabbitmq:
+    host: 127.0.01
+    username: guest
+    password: guest
+    port: 5672
   #swagger配置
   mvc:
     pathmatch:
