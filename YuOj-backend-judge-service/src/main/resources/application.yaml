@@ -36,13 +36,13 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+
   # rabbitmq配置
   rabbitmq:
     host: 127.0.0.1
     port: 5672
     password: guest
     username: guest
-
 
 
   #swagger配置

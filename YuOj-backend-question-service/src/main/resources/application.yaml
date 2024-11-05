@@ -37,6 +37,7 @@ spring:
       discovery:
         server-addr: 127.0.0.1:8848
 
+  # mq配置
   rabbitmq:
     host: 127.0.01
     username: guest

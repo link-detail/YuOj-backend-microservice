@@ -9,6 +9,7 @@ server:
       cookie:
         #cookie 30天过期（单位：s）
         max-age: 2592000
+        # session统一存放路径
         path: /api
 #spring基本配置
 spring:
