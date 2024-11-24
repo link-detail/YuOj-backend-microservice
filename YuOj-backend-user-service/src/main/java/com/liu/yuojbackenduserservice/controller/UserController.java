@@ -172,6 +172,10 @@ public class UserController {
         if (deleteRequest == null || deleteRequest.getId () <= 0) {
             throw new BusinessException (ErrorCode.PARAMS_ERROR);
         }
+        User byId = userService.getById (deleteRequest.getId ());
+        if (byId==null){
+            throw new BusinessException (ErrorCode.NOT_FOUND_ERROR);
+        }
 
         return ResultUtils.success (userService.removeById (deleteRequest.getId ()));
 
