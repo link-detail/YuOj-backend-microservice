@@ -9,7 +9,6 @@ import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 
 /**

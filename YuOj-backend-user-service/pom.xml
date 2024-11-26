@@ -38,6 +38,12 @@
             <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
             <version>4.3.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.liu</groupId>
+            <artifactId>YuOj-backend-service-client</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
     <dependencyManagement>

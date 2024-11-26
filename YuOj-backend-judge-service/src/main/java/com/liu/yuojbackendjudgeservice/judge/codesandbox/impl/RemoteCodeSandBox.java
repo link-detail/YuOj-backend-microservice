@@ -9,7 +9,6 @@ import com.liu.yuojbackendjudgeservice.judge.codesandbox.CodeSandBox;
 import com.liu.yuojbackendmodel.codesandbox.ExecuteCodeRequest;
 import com.liu.yuojbackendmodel.codesandbox.ExecuteCodeResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.DigestUtils;
 
 /**
  * @Author 刘渠好
@@ -30,10 +29,9 @@ public class RemoteCodeSandBox implements CodeSandBox {
             //调用远程API接口服务
             String url = "http://localhost:8090/executeCode";
             String json = JSONUtil.toJsonStr (executeCodeRequest);
-            //解密key
-            String md5Secret = DigestUtils.md5DigestAsHex (("liu" + AUTH_REQUEST_SECRET).getBytes ());
+            //代码沙箱处加密了
             String body = HttpUtil.createPost (url)
-                    .header (AUTH_REQUEST_HEADER, md5Secret)
+                    .setReadTimeout (60000)
                     .body (json).execute ()
                     .body ();
             if (StrUtil.isBlank (body)) {

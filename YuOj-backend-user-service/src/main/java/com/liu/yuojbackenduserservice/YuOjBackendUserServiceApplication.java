@@ -17,7 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 //这就是需要统一类名的原因：com.liu.xxx
 @ComponentScan("com.liu")
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = "com.liu.yuojbackendserviceclient.service")
+@EnableFeignClients(basePackages = {"com.liu.yuojbackendserviceclient.service"})
 public class YuOjBackendUserServiceApplication {
 
     public static void main(String[] args) {

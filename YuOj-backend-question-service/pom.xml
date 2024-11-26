@@ -29,10 +29,10 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.liu</groupId>
-            <artifactId>YuOj-backend-service-client</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+        <groupId>com.liu</groupId>
+        <artifactId>YuOj-backend-service-client</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </dependency>
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
@@ -45,6 +45,7 @@
             <artifactId>spring-boot-starter-amqp</artifactId>
             <version>2.7.6</version>
         </dependency>
+
 
     </dependencies>
     <dependencyManagement>
